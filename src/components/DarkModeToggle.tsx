@@ -29,9 +29,9 @@ export default function DarkModeToggle() {
   return (
     <button
       onClick={() => setDark(!dark)}
-      className="p-2 bg-gray-200 dark:bg-gray-700 rounded"
+      className="px-4 py-2 bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 rounded-lg cursor-pointer transition-colors text-white font-medium shadow-md"
     >
-      {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      {dark ? "☀️ Light" : "🌙 Dark"}
     </button>
   );
 }
