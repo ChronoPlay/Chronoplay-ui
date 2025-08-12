@@ -47,11 +47,11 @@ export default function Home() {
 
         <div className="flex flex-col items-center gap-6 max-w-3xl text-center relative z-10">
           <h1 className="text-5xl font-black leading-tight tracking-tight text-primary-900 drop-shadow-lg">
-            Unleash Your Inner Champion
+            Play smart. Stay alive. Build your way to the top.
           </h1>
 
           <p className="text-lg max-w-xl font-normal leading-relaxed text-primary-800 drop-shadow-md">
-            Dive into the world of ChronoPlay, where strategy meets skill. Collect, build, and battle your way to victory in this thrilling competitive card game.
+            Jump into ChronoPlay, where you compete against others, survive tough challenges, and build your deck to win big. It’s all about quick thinking, clever moves, and leveling up your game every day. Ready to show what you’ve got?
           </p>
 
           <button
