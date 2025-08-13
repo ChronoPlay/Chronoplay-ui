@@ -28,38 +28,56 @@ export default function Home() {
         <Navbar />
       </header>
 
-      <main
-        className="relative min-h-screen flex flex-col items-center justify-center bg-[#181711] text-black px-6 pt-16 overflow-hidden"
-        style={{ fontFamily: '"Spline Sans", "Noto Sans", sans-serif' }}
-      >
-        {/* Background Video */}
-        <video
-          className="fixed top-0 left-0 w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          src="/welcome-bg.mp4" // Put your video file here in /public folder
-        />
+      <main className="min-h-screen flex flex-col items-center justify-center bg-primary-50 dark:bg-bg-dark px-6 pt-16 transition-colors">
+        {/* Video Container - Centered Box */}
+        <div className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-primary-300 dark:border-primary-600 bg-gray-900">
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls={false}
+            preload="auto"
+            src="/welcome-bg.mp4"
+            onError={(e) => console.error('Video error:', e)}
+            onLoadStart={() => console.log('Video loading started')}
+            onCanPlay={(e) => {
+              console.log('Video can play');
+              const video = e.target as HTMLVideoElement;
+              video.play().catch((err: any) => console.error('Play failed:', err));
+            }}
+            onLoadedData={() => console.log('Video loaded')}
+            onPlay={() => console.log('Video playing')}
+          />
 
-        {/* Overlay to blend video with theme */}
-        <div className="fixed inset-0 bg-primary-100 bg-opacity-30 -z-5"></div>
+          {/* Text Overlay on Video */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 ">
+            <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-tight text-primary-800 drop-shadow-2xl mb-4">
+              Play smart. Stay alive
+            </h1>
 
-        <div className="flex flex-col items-center gap-6 max-w-3xl text-center relative z-10">
-          <h1 className="text-5xl font-black leading-tight tracking-tight text-primary-900 drop-shadow-lg">
-            Play smart. Stay alive. Build your way to the top.
-          </h1>
+            <p className="text-lg md:text-xl max-w-2xl font-normal leading-relaxed text-primary-700 drop-shadow-lg mb-6">
+              Jump into ChronoPlay, where you compete against others
+            </p>
 
-          <p className="text-lg max-w-xl font-normal leading-relaxed text-primary-800 drop-shadow-md">
-            Jump into ChronoPlay, where you compete against others, survive tough challenges, and build your deck to win big. It’s all about quick thinking, clever moves, and leveling up your game every day. Ready to show what you’ve got?
+            <button
+              onClick={handleGetStarted}
+              className="rounded-full bg-primary-600 hover:bg-primary-700 px-8 py-3 font-bold text-primary-50 transition-all transform hover:scale-105 shadow-xl border-2 border-primary-800"
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+
+        {/* Additional Content Below Video */}
+        <div className="mt-12 text-center max-w-2xl">
+          <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-200 mb-4">
+            Welcome to ChronoPlay
+          </h2>
+          <p className="text-primary-700 dark:text-primary-300">
+            Experience the ultimate card game adventure with stunning visuals and competitive gameplay.
           </p>
-
-          <button
-            onClick={handleGetStarted}
-            className="mt-4 rounded-full bg-primary-700 hover:bg-primary-800 px-8 py-3 font-bold text-primary-50 transition-all transform hover:scale-105 shadow-lg border border-primary-800"
-          >
-            Get Started
-          </button>
         </div>
       </main>
     </>
