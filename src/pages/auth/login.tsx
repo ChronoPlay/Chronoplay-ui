@@ -36,10 +36,6 @@ export default function Login() {
     }, [router]);
 
     const validateForm = () => {
-        if (!/^\S+@\S+\.\S+$/.test(email)) {
-            setError("Please enter a valid email.");
-            return false;
-        }
         if (password.length < 6 || password.length > 15) {
             setError("Password must be 6-15 characters long.");
             return false;
@@ -106,14 +102,14 @@ export default function Login() {
                         <div>
                             <label className="block text-primary-700 dark:text-primary-300 mb-1">Email</label>
                             <input
-                                type="email"
-                                name="email"
+                                type="text"
+                                name="email or username"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-3 py-2 rounded-lg border border-primary-300 dark:border-primary-600 
                          bg-primary-50 dark:bg-primary-800 text-primary-900 dark:text-primary-100 focus:outline-none 
                          focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
-                                placeholder="Enter your email"
+                                placeholder="Enter your email or username"
                                 required
                             />
                         </div>
