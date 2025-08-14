@@ -3,10 +3,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light mode - warm yellows */
+  --background: #fffbeb;
+  --foreground: #78350f;
+  --surface: #fef3c7;
+  --border: #fde68a;
+  --accent: #f59e0b;
+  --accent-foreground: #ffffff;
 }
 
 @theme inline {
@@ -18,13 +22,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark mode - deep browns with yellow accents */
+    --background: #1c1917;
+    --foreground: #fef3c7;
+    --surface: #292524;
+    --border: #44403c;
+    --accent: #fbbf24;
+    --accent-foreground: #1c1917;
   }
+}
+
+.dark {
+  --background: #1c1917;
+  --foreground: #fef3c7;
+  --surface: #292524;
+  --border: #44403c;
+  --accent: #fbbf24;
+  --accent-foreground: #1c1917;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
