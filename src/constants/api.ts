@@ -14,3 +14,6 @@ if (!API_BASE) {
 
 export const LOGIN_API = `${API_BASE}/auth/login`;
 export const SIGNUP_API = `${API_BASE}/auth/signup`;
+export const PROFILE_API = `${API_BASE}/user/user`;
+export const USER_PROFILE_API = `${API_BASE}/user/get_user`;
+export const GET_POSSIBLE_EXCHANGE_API = `${API_BASE}/transaction/get_possible_exchange`;

@@ -1,15 +1,19 @@
 import { Card } from "@/components/Cards/Card";
 import { EmptyCard } from "@/components/Cards/EmptyCard";
-import { PROFILE_API } from "@/constants/api";
+import { USER_PROFILE_API } from "@/constants/api";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 export default function ProfilePage() {
+    const router = useRouter();
+    const { id } = router.query;
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [cards, setCards] = useState([]);
 
     const name = "Sparsh Kumar";
-    const avatarUrl = "/avatar.png"; // Make sure this file exists in /public
+    const avatarUrl = "/avatar.png";
     const initialCards = [
         { id: 1, title: "Card 1", imageUrl: "/placeholder-card.png" },
         { id: 2, title: "Card 2", imageUrl: "/placeholder-card.png" },
@@ -19,7 +23,6 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // ✅ Only access localStorage inside useEffect (client-side)
                 const token = localStorage.getItem("authToken");
                 console.log("Token from localStorage:", token);
                 if (!token) {
@@ -28,7 +31,8 @@ export default function ProfilePage() {
                     return;
                 }
 
-                const response = await fetch(PROFILE_API, {
+                const response = await fetch(`${USER_PROFILE_API}?user_id=${id}`, {
+                    method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -37,7 +41,7 @@ export default function ProfilePage() {
                 const result = await response.json();
                 if (response.ok) {
                     setData(result.data);
-                    setCards(result.data.cards || initialCards); // Use fetched cards or fallback
+                    setCards(result.data.cards || []);
                 } else {
                     console.error("Failed to fetch profile data:", result);
                 }
@@ -48,8 +52,10 @@ export default function ProfilePage() {
             }
         };
 
-        fetchData();
-    }, []);
+        if (id) {
+            fetchData();
+        }
+    }, [id]);
 
     const totalSlots = 8;
     const filledCards = cards.slice(0, totalSlots);
@@ -75,10 +81,19 @@ export default function ProfilePage() {
 
                     <div className="mt-6 text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         <p><strong>Name:</strong> {data?.name}</p>
-                        <p><strong>Phone Number:</strong> {data?.phone_number}</p>
+                        {/* <p><strong>Phone Number:</strong> {data?.phone_number}</p> */}
                         <p><strong>Cash:</strong> {data?.cash}</p>
                         <p><strong>Role:</strong> {data?.user_type}</p>
                     </div>
+
+                    {/* ✅ Conditional Exchange Button */}
+                    {true && (
+                        <button className="mt-6 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow"
+                            onClick={() => router.push(`/trade/${id}`)}
+                        >
+                            Trade
+                        </button>
+                    )}
                 </div>
 
                 {/* Right Side - Cards Grid */}
@@ -105,14 +120,14 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Buttons Below Cards */}
-                    <div className="mt-6 flex gap-4">
+                    {/* <div className="mt-6 flex gap-4">
                         <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
                             Open Binder
                         </button>
                         <button className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg shadow">
                             Edit Visible Cards
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
