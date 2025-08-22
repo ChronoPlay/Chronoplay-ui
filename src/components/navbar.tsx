@@ -114,7 +114,7 @@ export default function Navbar() {
             } items-center gap-4`}
         >
           {/* Dark Mode Toggle */}
-          <DarkModeToggle />
+          {/* <DarkModeToggle /> */}
 
           {/* Logout Button */}
           {isLoggedIn && (
