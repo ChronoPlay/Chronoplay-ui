@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { Coins, CreditCard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GET_POSSIBLE_EXCHANGE_API } from "@/constants/api";
+import { getWithExpiry } from "@/utils/storage";
 
 type Card = {
     number: string;
@@ -43,7 +44,7 @@ export default function TradePage() {
             try {
                 const res = await fetch(`${GET_POSSIBLE_EXCHANGE_API}?user_id=${id}`, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        Authorization: `Bearer ${getWithExpiry("authToken")}`,
                     },
                 });
                 const resp = await res.json();
@@ -82,6 +83,43 @@ export default function TradePage() {
             if (value > 0) setYourCash(0);
         }
     };
+
+    const handleProposeTrade = async () => {
+        if (!id) return;
+
+        const payload = {
+            to_user_id: id,
+            yourCash,
+            traderCash,
+            yourCards: Object.entries(yourCardQuantities)
+                .filter(([_, qty]) => qty > 0)
+                .map(([number, qty]) => ({ number, quantity: qty })),
+            traderCards: Object.entries(traderCardQuantities)
+                .filter(([_, qty]) => qty > 0)
+                .map(([number, qty]) => ({ number, quantity: qty })),
+        };
+
+        try {
+            const res = await fetch("/api/trade/propose", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getWithExpiry("authToken")}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const resp = await res.json();
+            if (!res.ok) throw new Error(resp.message || "Failed to propose trade");
+
+            alert("✅ Trade proposed successfully!");
+            console.log("Trade Response:", resp);
+        } catch (err) {
+            console.error("❌ Failed to propose trade:", err);
+            alert("Failed to propose trade. Try again!");
+        }
+    };
+
 
     // handle card quantity changes
     const handleCardQtyChange = (
@@ -286,7 +324,8 @@ export default function TradePage() {
             )}
 
             {/* Confirm Button */}
-            <button className="mt-10 px-8 py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-xl shadow-lg transition">
+            <button className="mt-10 px-8 py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-xl shadow-lg transition"
+                onClick={handleProposeTrade}>
                 🚀 Propose Trade
             </button>
         </div>

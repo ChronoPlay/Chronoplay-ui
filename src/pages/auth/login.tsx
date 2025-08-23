@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { LOGIN_API } from "@/constants/api";
 import SuccessPopup from "@/components/SuccessPopup";
+import { getWithExpiry, setWithExpiry } from "@/utils/storage";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -29,7 +30,8 @@ export default function Login() {
     const [successMessage, setSuccessMessage] = useState(""); // <-- added this
 
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
+        const token = getWithExpiry("authToken");
+        console.log("Token from localStorage:", token);
         if (token) {
             router.replace("/"); // redirect to home if already logged in
         }
@@ -65,7 +67,7 @@ export default function Login() {
 
             const data = await res.json();
             console.log("Login successful:", data);
-            localStorage.setItem("authToken", data?.data?.token);
+            setWithExpiry("authToken", data?.data?.token, 60 * 60 * 1000); // 1 hour
 
             // Set message from backend response
             setSuccessMessage(data.message || "Login successful!");

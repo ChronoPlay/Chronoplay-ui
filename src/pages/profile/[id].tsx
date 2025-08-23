@@ -1,6 +1,7 @@
 import { Card } from "@/components/Cards/Card";
 import { EmptyCard } from "@/components/Cards/EmptyCard";
 import { USER_PROFILE_API } from "@/constants/api";
+import { getWithExpiry } from "@/utils/storage";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -23,7 +24,7 @@ export default function ProfilePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem("authToken");
+                const token = getWithExpiry("authToken");
                 console.log("Token from localStorage:", token);
                 if (!token) {
                     console.error("No token found in localStorage");

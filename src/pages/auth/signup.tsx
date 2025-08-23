@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import SuccessPopup from "@/components/SuccessPopup";
 import { SIGNUP_API } from "@/constants/api";
 import { Eye, EyeOff } from "lucide-react";
+import { getWithExpiry } from "@/utils/storage";
 
 export default function SignUp() {
   const router = useRouter();
@@ -25,7 +26,8 @@ export default function SignUp() {
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     if (token) {
       router.replace("/"); // redirect to home if already logged in
     }

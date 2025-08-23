@@ -5,6 +5,7 @@ import Link from "next/link";
 import DarkModeToggle from "./DarkModeToggle";
 import { Menu, X, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getWithExpiry } from "../utils/storage"
 
 export default function Navbar() {
   const router = useRouter();
@@ -12,7 +13,8 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const openMenu = () => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     setIsLoggedIn(!!token);
     setIsOpen(true);
   };
