@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Coins, CreditCard } from "lucide-react";
 import { useEffect, useState } from "react";
-import { GET_POSSIBLE_EXCHANGE_API } from "@/constants/api";
+import { GET_POSSIBLE_EXCHANGE_API, INITIATE_EXCHANGE_API } from "@/constants/api";
 import { getWithExpiry } from "@/utils/storage";
 
 type Card = {
@@ -87,20 +87,33 @@ export default function TradePage() {
     const handleProposeTrade = async () => {
         if (!id) return;
 
-        const payload = {
-            to_user_id: id,
+        console.log("Proposing trade with:", {
             yourCash,
             traderCash,
-            yourCards: Object.entries(yourCardQuantities)
-                .filter(([_, qty]) => qty > 0)
-                .map(([number, qty]) => ({ number, quantity: qty })),
-            traderCards: Object.entries(traderCardQuantities)
-                .filter(([_, qty]) => qty > 0)
-                .map(([number, qty]) => ({ number, quantity: qty })),
+            yourCardQuantities,
+            traderCardQuantities,
+        });
+        const payload = {
+            given_to: Number(id), // ensure numeric
+            cash_sent: Number(yourCash),
+            cash_recieved: Number(traderCash), // fixed spelling
+            cards_sent: Object.entries(yourCardQuantities)
+                .filter(([_, qty]) => Number(qty) > 0)
+                .map(([number, qty]) => ({
+                    card_number: number,   // convert key to number
+                    amount: Number(qty),    // convert value to number
+                })),
+            cards_recieved: Object.entries(traderCardQuantities)
+                .filter(([_, qty]) => Number(qty) > 0)
+                .map(([number, qty]) => ({
+                    card_number: number,
+                    amount: Number(qty),
+                })),
         };
 
+
         try {
-            const res = await fetch("/api/trade/propose", {
+            const res = await fetch(INITIATE_EXCHANGE_API, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -113,6 +126,7 @@ export default function TradePage() {
             if (!res.ok) throw new Error(resp.message || "Failed to propose trade");
 
             alert("✅ Trade proposed successfully!");
+            router.reload(); // reload to reset state
             console.log("Trade Response:", resp);
         } catch (err) {
             console.error("❌ Failed to propose trade:", err);

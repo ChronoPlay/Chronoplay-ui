@@ -108,6 +108,13 @@ export default function Navbar() {
           >
             Contribute
           </Link>
+          <Link
+            href="/history"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors"
+          >
+            History
+          </Link>
         </nav>
 
         {/* Bottom Section */}
