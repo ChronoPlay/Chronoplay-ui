@@ -6,6 +6,7 @@ import DarkModeToggle from "./DarkModeToggle";
 import { Menu, X, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getWithExpiry } from "../utils/storage"
+import NotificationDropdown from "./notificationDropdown";
 
 export default function Navbar() {
   const router = useRouter();
@@ -36,12 +37,15 @@ export default function Navbar() {
         </Link>
 
         {/* Hamburger Menu Button */}
-        <button
-          onClick={openMenu}
-          className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <button
+            onClick={openMenu}
+            className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
       </header>
 
       {/* Overlay for main content when sidebar is open */}
