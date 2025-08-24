@@ -1,6 +1,7 @@
 import { Card } from "@/components/Cards/Card";
 import { EmptyCard } from "@/components/Cards/EmptyCard";
 import { PROFILE_API } from "@/constants/api";
+import { getWithExpiry } from "@/utils/storage";
 import React, { useEffect, useState } from "react";
 
 export default function ProfilePage() {
@@ -20,7 +21,7 @@ export default function ProfilePage() {
         const fetchData = async () => {
             try {
                 // ✅ Only access localStorage inside useEffect (client-side)
-                const token = localStorage.getItem("authToken");
+                const token = getWithExpiry("authToken");
                 console.log("Token from localStorage:", token);
                 if (!token) {
                     console.error("No token found in localStorage");

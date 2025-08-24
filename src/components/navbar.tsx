@@ -5,6 +5,8 @@ import Link from "next/link";
 import DarkModeToggle from "./DarkModeToggle";
 import { Menu, X, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getWithExpiry } from "../utils/storage"
+import NotificationDropdown from "./notificationDropdown";
 
 export default function Navbar() {
   const router = useRouter();
@@ -12,7 +14,8 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const openMenu = () => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     setIsLoggedIn(!!token);
     setIsOpen(true);
   };
@@ -34,12 +37,15 @@ export default function Navbar() {
         </Link>
 
         {/* Hamburger Menu Button */}
-        <button
-          onClick={openMenu}
-          className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <button
+            onClick={openMenu}
+            className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
       </header>
 
       {/* Overlay for main content when sidebar is open */}
@@ -105,6 +111,13 @@ export default function Navbar() {
             className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors"
           >
             Contribute
+          </Link>
+          <Link
+            href="/history"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors"
+          >
+            History
           </Link>
         </nav>
 
