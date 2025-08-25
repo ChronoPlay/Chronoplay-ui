@@ -29,7 +29,7 @@ export default function SignUp() {
     const token = getWithExpiry("authToken");
     console.log("Token from localStorage:", token);
     if (token) {
-      router.replace("/"); // redirect to home if already logged in
+      router.replace("/dashboard"); // redirect to home if already logged in
     }
   }, [router]);
 

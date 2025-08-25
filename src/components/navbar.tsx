@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import DarkModeToggle from "./DarkModeToggle";
 import { Menu, X, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getWithExpiry } from "../utils/storage"
+import { getWithExpiry } from "../utils/storage";
 import NotificationDropdown from "./notificationDropdown";
 
 export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ check auth token on mount
+  useEffect(() => {
+    const token = getWithExpiry("authToken");
+    setIsLoggedIn(!!token);
+  }, []);
 
   const openMenu = () => {
     const token = getWithExpiry("authToken");
@@ -24,7 +29,7 @@ export default function Navbar() {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setIsOpen(false);
-    router.push("/"); // redirect to home page
+    router.push("/");
   };
 
   return (
@@ -32,7 +37,10 @@ export default function Navbar() {
       {/* Navbar */}
       <header className="flex justify-between items-center p-4 shadow-md bg-yellow-200 dark:bg-yellow-900 border-b border-yellow-300 dark:border-yellow-700 z-30 relative">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-primary-800 dark:text-primary-200 hover:text-primary-600 dark:hover:text-primary-100 transition-colors">
+        <Link
+          href={isLoggedIn ? "/dashboard" : "/"}
+          className="text-xl font-bold text-primary-800 dark:text-primary-200 hover:text-primary-600 dark:hover:text-primary-100 transition-colors"
+        >
           ChronoPlay
         </Link>
 
@@ -126,9 +134,6 @@ export default function Navbar() {
           className={`mt-auto p-4 border-t border-gray-200/50 dark:border-gray-700/50 flex ${isLoggedIn ? "justify-between" : "justify-center"
             } items-center gap-4`}
         >
-          {/* Dark Mode Toggle */}
-          {/* <DarkModeToggle /> */}
-
           {/* Logout Button */}
           {isLoggedIn && (
             <button

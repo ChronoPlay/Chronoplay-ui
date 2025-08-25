@@ -33,7 +33,7 @@ export default function Login() {
         const token = getWithExpiry("authToken");
         console.log("Token from localStorage:", token);
         if (token) {
-            router.replace("/"); // redirect to home if already logged in
+            router.replace("/dashboard"); // redirect to dashboard if already logged in
         }
     }, [router]);
 
@@ -84,7 +84,7 @@ export default function Login() {
     // Function to handle OK click on popup
     const handlePopupOk = () => {
         setShowSuccessPopup(false);
-        router.push("/");
+        router.push("/dashboard");
     };
 
     return (
