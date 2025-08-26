@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import SuccessPopup from "@/components/SuccessPopup";
 import { SIGNUP_API } from "@/constants/api";
 import { Eye, EyeOff } from "lucide-react";
+import { getWithExpiry } from "@/utils/storage";
 
 export default function SignUp() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function SignUp() {
     name: "",
     email: "",
     password: "",
-    username: "",
+    user_name: "",
     phone_number: "",
   });
 
@@ -25,9 +26,10 @@ export default function SignUp() {
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     if (token) {
-      router.replace("/"); // redirect to home if already logged in
+      router.replace("/dashboard"); // redirect to home if already logged in
     }
   }, [router]);
 
@@ -141,8 +143,8 @@ export default function SignUp() {
               <label className="block text-primary-700 dark:text-primary-300 mb-1">Username</label>
               <input
                 type="text"
-                name="username"
-                value={formData.username}
+                name="user_name"
+                value={formData.user_name}
                 onChange={handleChange}
                 className="w-full px-3 py-2 rounded-lg border border-primary-300 dark:border-primary-600 
                          bg-primary-50 dark:bg-primary-800 text-primary-900 dark:text-primary-100 focus:outline-none 

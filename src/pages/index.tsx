@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/navbar";
+import { getWithExpiry } from "../utils/storage"
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     setIsLoggedIn(!!token);
   }, []);
 

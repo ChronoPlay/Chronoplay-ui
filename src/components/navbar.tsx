@@ -1,18 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import DarkModeToggle from "./DarkModeToggle";
 import { Menu, X, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getWithExpiry } from "../utils/storage";
+import NotificationDropdown from "./notificationDropdown";
 
 export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // ✅ check auth token on mount
+  useEffect(() => {
+    const token = getWithExpiry("authToken");
+    setIsLoggedIn(!!token);
+  }, []);
+
   const openMenu = () => {
-    const token = localStorage.getItem("authToken");
+    const token = getWithExpiry("authToken");
+    console.log("Token from localStorage:", token);
     setIsLoggedIn(!!token);
     setIsOpen(true);
   };
@@ -21,7 +29,7 @@ export default function Navbar() {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     setIsOpen(false);
-    router.push("/"); // redirect to home page
+    router.push("/");
   };
 
   return (
@@ -29,17 +37,23 @@ export default function Navbar() {
       {/* Navbar */}
       <header className="flex justify-between items-center p-4 shadow-md bg-yellow-200 dark:bg-yellow-900 border-b border-yellow-300 dark:border-yellow-700 z-30 relative">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-primary-800 dark:text-primary-200 hover:text-primary-600 dark:hover:text-primary-100 transition-colors">
+        <Link
+          href={isLoggedIn ? "/dashboard" : "/"}
+          className="text-xl font-bold text-primary-800 dark:text-primary-200 hover:text-primary-600 dark:hover:text-primary-100 transition-colors"
+        >
           ChronoPlay
         </Link>
 
         {/* Hamburger Menu Button */}
-        <button
-          onClick={openMenu}
-          className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
-        >
-          <Menu size={24} />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationDropdown />
+          <button
+            onClick={openMenu}
+            className="p-2 rounded-lg hover:bg-primary-200 dark:hover:bg-primary-700 text-primary-700 dark:text-primary-300 transition-colors"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
       </header>
 
       {/* Overlay for main content when sidebar is open */}
@@ -106,6 +120,13 @@ export default function Navbar() {
           >
             Contribute
           </Link>
+          <Link
+            href="/history"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors"
+          >
+            History
+          </Link>
         </nav>
 
         {/* Bottom Section */}
@@ -113,9 +134,6 @@ export default function Navbar() {
           className={`mt-auto p-4 border-t border-gray-200/50 dark:border-gray-700/50 flex ${isLoggedIn ? "justify-between" : "justify-center"
             } items-center gap-4`}
         >
-          {/* Dark Mode Toggle */}
-          <DarkModeToggle />
-
           {/* Logout Button */}
           {isLoggedIn && (
             <button

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { LOGIN_API } from "@/constants/api";
 import SuccessPopup from "@/components/SuccessPopup";
+import { getWithExpiry, setWithExpiry } from "@/utils/storage";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -29,17 +30,14 @@ export default function Login() {
     const [successMessage, setSuccessMessage] = useState(""); // <-- added this
 
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
+        const token = getWithExpiry("authToken");
+        console.log("Token from localStorage:", token);
         if (token) {
-            router.replace("/"); // redirect to home if already logged in
+            router.replace("/dashboard"); // redirect to dashboard if already logged in
         }
     }, [router]);
 
     const validateForm = () => {
-        if (!/^\S+@\S+\.\S+$/.test(email)) {
-            setError("Please enter a valid email.");
-            return false;
-        }
         if (password.length < 6 || password.length > 15) {
             setError("Password must be 6-15 characters long.");
             return false;
@@ -69,7 +67,7 @@ export default function Login() {
 
             const data = await res.json();
             console.log("Login successful:", data);
-            localStorage.setItem("authToken", data?.data?.token);
+            setWithExpiry("authToken", data?.data?.token, 60 * 60 * 1000); // 1 hour
 
             // Set message from backend response
             setSuccessMessage(data.message || "Login successful!");
@@ -86,7 +84,7 @@ export default function Login() {
     // Function to handle OK click on popup
     const handlePopupOk = () => {
         setShowSuccessPopup(false);
-        router.push("/");
+        router.push("/dashboard");
     };
 
     return (
@@ -106,14 +104,14 @@ export default function Login() {
                         <div>
                             <label className="block text-primary-700 dark:text-primary-300 mb-1">Email</label>
                             <input
-                                type="email"
-                                name="email"
+                                type="text"
+                                name="email or username"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-3 py-2 rounded-lg border border-primary-300 dark:border-primary-600 
                          bg-primary-50 dark:bg-primary-800 text-primary-900 dark:text-primary-100 focus:outline-none 
                          focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
-                                placeholder="Enter your email"
+                                placeholder="Enter your email or username"
                                 required
                             />
                         </div>
