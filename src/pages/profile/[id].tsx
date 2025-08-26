@@ -6,12 +6,29 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
+interface ProfileData {
+    user_name: string;
+    email: string;
+    name: string;
+    phone_number: string;
+    cash: number;
+    user_type: string;
+}
+
+interface CardData {
+    number: string;
+    rarity: string;
+    name: string;
+    description: string;
+    image: string;
+}
+
 export default function ProfilePage() {
     const router = useRouter();
     const { id } = router.query;
-    const [data, setData] = useState(null);
+    const [data, setData] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState(true);
-    const [cards, setCards] = useState([]);
+    const [cards, setCards] = useState<CardData[]>([]);
 
     const name = "Sparsh Kumar";
     const avatarUrl = "/avatar.png";

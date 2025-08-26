@@ -152,7 +152,7 @@ export default function Login() {
                         </button>
 
                         <p className="mt-4 text-sm text-primary-600 dark:text-primary-400">
-                            Don't have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link href="/auth/signup" className="text-primary-700 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 hover:underline font-semibold transition-colors">
                                 Sign up here
                             </Link>
@@ -161,5 +161,5 @@ export default function Login() {
                 </div>
             )}
         </div>
-    ); " "
+    );
 }

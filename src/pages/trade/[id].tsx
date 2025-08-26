@@ -277,9 +277,8 @@ export default function TradePage() {
                             <span className="text-xs text-yellow-800">Max: {traderCashMax}</span>
                         </div>
 
-                        {/* Trader's Cards */}
                         <div className="flex flex-col gap-3 mt-6 w-full">
-                            <h3 className="text-lg font-semibold text-yellow-800">Trader's Cards</h3>
+                            <h3 className="text-lg font-semibold text-yellow-800">Trader&apos; Cards</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {(expandedTrader ? traderCards : traderCards.slice(0, 3)).map((card) => {
                                     const qty = traderCardQuantities[card.number] || 0;
