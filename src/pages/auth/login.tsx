@@ -5,9 +5,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { LOGIN_API } from "@/constants/api";
+import { GOOGLE_LOGIN_API, LOGIN_API } from "@/constants/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { getWithExpiry, setWithExpiry } from "@/utils/storage";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -80,6 +81,39 @@ export default function Login() {
             setLoading(false);
         }
     };
+    const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+        const googleToken = credentialResponse.credential;
+        setError("");
+        setLoading(true);
+
+        try {
+            const res = await fetch(GOOGLE_LOGIN_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: googleToken }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.message || "Google login failed");
+            }
+
+            const data = await res.json();
+            console.log("Google login successful:", data);
+            setWithExpiry("authToken", data?.data?.token, 60 * 60 * 1000); // 1 hour
+
+            // Set message from backend response
+            setSuccessMessage(data.message || "Login successful!");
+
+            // Show success popup
+            setShowSuccessPopup(true);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     // Function to handle OK click on popup
     const handlePopupOk = () => {
@@ -150,6 +184,11 @@ export default function Login() {
                         >
                             {loading ? "Logging in..." : "Log In"}
                         </button>
+
+                        <GoogleLogin
+                            onSuccess={handleGoogleLogin}
+                            onError={() => setError('Google login failed. Please try again.')}
+                        />
 
                         <p className="mt-4 text-sm text-primary-600 dark:text-primary-400">
                             Don&apos;t have an account?{" "}

@@ -21,3 +21,4 @@ export const INITIATE_EXCHANGE_API = `${API_BASE}/transaction/exchange`;
 export const GET_TRANSACTION_HISTORY_API = `${API_BASE}/transaction/get_transactions`;
 export const NOTIFICATIONS_API = `${API_BASE}/notification/get_notifications`;
 export const READ_NOTIFICATION_API = `${API_BASE}/notification/mark_as_read`;
+export const GOOGLE_LOGIN_API = `${API_BASE}/auth/google`;
