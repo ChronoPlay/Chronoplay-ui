@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Navbar from "./navbar";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -11,7 +12,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       {/* Main content fills remaining space */}
       <main className="flex-grow p-6 overflow-auto">
-        {children}
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
+          {children}
+        </GoogleOAuthProvider>
       </main>
 
       {/* Footer with fixed height */}
